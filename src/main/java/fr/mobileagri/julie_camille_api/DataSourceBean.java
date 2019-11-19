@@ -8,10 +8,6 @@ import javax.sql.DataSource;
 
 @Configuration
 public class DataSourceBean {
-  user_admin: cetautoadmin
-  user_rw: cetauto
-  password_admin: 7s574awrb38v
-  password_rw: f8kp3ejthndp
   @Bean
   public DataSource getDataSource() {
     DataSourceBuilder dataSourceBuilder = DataSourceBuilder.create();
