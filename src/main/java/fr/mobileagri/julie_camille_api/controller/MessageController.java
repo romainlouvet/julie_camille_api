@@ -11,6 +11,6 @@ public class MessageController {
 
     //
 
-    return "Coucou4";
+    return "Coucou5";
   }
 }
