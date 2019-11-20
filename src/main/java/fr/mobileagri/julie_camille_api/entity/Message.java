@@ -2,24 +2,24 @@ package fr.mobileagri.julie_camille_api.entity;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
 @Entity
 public class Message {
 
-  @Id
-  @GeneratedValue
+  @Id @GeneratedValue(strategy= GenerationType.IDENTITY)
   private Long id;
-  private String name;
+  private String text;
+  private String admin;
+  private String ip;
 
   public Message() {
-    super();
   }
 
-  public Message(Long id, String name) {
-    super();
-    this.id = id;
-    this.name = name;
+  public Message(String text, String admin) {
+    this.text = text;
+    this.admin = admin;
   }
 
   public Long getId() {
@@ -30,11 +30,19 @@ public class Message {
     this.id = id;
   }
 
-  public String getName() {
-    return name;
+  public String getText() {
+    return text;
   }
 
-  public void setName(String name) {
-    this.name = name;
+  public void setText(String text) {
+    this.text = text;
+  }
+
+  public String getAdmin() {
+    return admin;
+  }
+
+  public void setAdmin(String admin) {
+    this.admin = admin;
   }
 }
