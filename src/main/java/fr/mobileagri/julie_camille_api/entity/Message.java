@@ -17,11 +17,6 @@ public class Message {
   public Message() {
   }
 
-  public Message(String text, String admin) {
-    this.text = text;
-    this.admin = admin;
-  }
-
   public Long getId() {
     return id;
   }
@@ -44,5 +39,13 @@ public class Message {
 
   public void setAdmin(String admin) {
     this.admin = admin;
+  }
+
+  public String getIp() {
+    return ip;
+  }
+
+  public void setIp(String ip) {
+    this.ip = ip;
   }
 }

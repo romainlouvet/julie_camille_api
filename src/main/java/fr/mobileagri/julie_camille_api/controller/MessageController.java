@@ -3,11 +3,19 @@ package fr.mobileagri.julie_camille_api.controller;
 import fr.mobileagri.julie_camille_api.entity.Message;
 import fr.mobileagri.julie_camille_api.service.MessageService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
-import java.util.UUID;
+
+import javax.persistence.EntityNotFoundException;
+import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
 
 @RestController
 public class MessageController {
@@ -20,9 +28,29 @@ public class MessageController {
     return messageService.list();
   }
 
-  @RequestMapping("/create")
-  public void createMessage() {
-    Message message = new Message("t" + UUID.randomUUID().toString(), "toto");
-    messageService.create(message);
+  /**
+   * Gets message by id.
+   *
+   * @param messageId the message id
+   * @return the message by id
+   */
+  @GetMapping("/message/{id}")
+  public ResponseEntity<Message> getUMessageById(@PathVariable(value = "id") Long messageId) {
+    Message message = messageService.findById(messageId)
+        .orElseThrow(() -> new EntityNotFoundException("Message not found on :: " + messageId));
+
+    return ResponseEntity.ok().body(message);
+  }
+
+  /**
+   * Create Message message.
+   *
+   * @param message the message
+   * @return the message
+   */
+  @PostMapping("/message")
+  public Message createMessage(@Valid @RequestBody Message message, HttpServletRequest request) {
+    message.setIp(request.getRemoteAddr());
+    return messageService.create(message);
   }
 }
