@@ -39,7 +39,11 @@ public class MessageController {
     Message message = messageService.findById(messageId)
         .orElseThrow(() -> new EntityNotFoundException("Message not found on :: " + messageId));
 
-    return ResponseEntity.ok().body(message);
+    if (message != null) {
+      return ResponseEntity.ok().body(message);
+    } else {
+      return ResponseEntity.badRequest().build();
+    }
   }
 
   /**
@@ -49,8 +53,14 @@ public class MessageController {
    * @return the message
    */
   @PostMapping("/message")
-  public Message createMessage(@Valid @RequestBody Message message, HttpServletRequest request) {
+  public ResponseEntity<Message> createMessage(@Valid @RequestBody Message message, HttpServletRequest request) {
     message.setIp(request.getRemoteAddr());
-    return messageService.create(message);
+    Message messageCreated = messageService.create(message);
+
+    if (messageCreated != null) {
+      return ResponseEntity.ok().body(messageCreated);
+    } else {
+      return ResponseEntity.badRequest().build();
+    }
   }
 }

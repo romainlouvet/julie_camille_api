@@ -18,11 +18,15 @@ public class MessageService {
     return messageRepository.findAll();
   }
 
-  public Message create(Message message){
-    return messageRepository.save(message);
+  public Message create(Message message) {
+    //On insère que les messages avec une ip non existante en bdd
+    if (!messageRepository.existsByIp(message.getIp())) {
+      return messageRepository.save(message);
+    }
+    return null;
   }
 
-  public Optional<Message> findById(Long id){
+  public Optional<Message> findById(Long id) {
     return messageRepository.findById(id);
   }
 }
