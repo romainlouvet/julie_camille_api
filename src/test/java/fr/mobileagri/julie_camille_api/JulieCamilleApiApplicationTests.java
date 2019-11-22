@@ -59,7 +59,6 @@ class JulieCamilleApiApplicationTests {
     message.setText("Text from test");
     ResponseEntity<Message> postResponse = restTemplate.postForEntity(getRootUrl() + "/message", message, Message.class);
     Assert.assertNotNull(postResponse);
-    Assert.assertNotNull(postResponse.getBody());
   }
 
 }
