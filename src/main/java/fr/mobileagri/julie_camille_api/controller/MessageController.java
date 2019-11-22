@@ -62,4 +62,11 @@ public class MessageController {
       return ResponseEntity.badRequest().build();
     }
   }
+
+
+
+  @GetMapping("/version")
+  public String getVersion() {
+    return "1.0";
+  }
 }
