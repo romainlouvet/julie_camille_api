@@ -64,7 +64,6 @@ public class MessageController {
   }
 
 
-
   @GetMapping("/version")
   public String getVersion() {
     return "1.0";

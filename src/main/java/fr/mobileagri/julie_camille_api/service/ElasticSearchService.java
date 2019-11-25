@@ -13,6 +13,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 @Service
 public class ElasticSearchService {
@@ -27,8 +29,8 @@ public class ElasticSearchService {
 
   public IndexResponse send(String index, Object object) {
 
-    IndexRequest request = new IndexRequest(index);
-
+    SimpleDateFormat indexFormat = new SimpleDateFormat("yyyy.MM.dd");
+    IndexRequest request = new IndexRequest(index + indexFormat.format(new Date()), "_doc");
     String json;
     try {
       json = new Gson().toJson(object);

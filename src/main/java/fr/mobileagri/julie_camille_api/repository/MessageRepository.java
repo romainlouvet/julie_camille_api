@@ -9,5 +9,6 @@ import java.util.List;
 @Repository
 public interface MessageRepository extends JpaRepository<Message, Long> {
   List<Message> findByIp(String ip);
+
   boolean existsByIp(String ip);
 }
