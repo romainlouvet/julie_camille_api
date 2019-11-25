@@ -14,37 +14,42 @@ import java.util.Optional;
 @Service
 public class MessageService {
 
-  public static final String INDEX_MESSAGE = "julie_camille_messages";
+    public static final String INDEX_MESSAGE = "julie_camille_messages";
 
-  @Autowired
-  private MessageRepository messageRepository;
+    @Autowired
+    private MessageRepository messageRepository;
 
-  @Autowired
-  private ElasticSearchService elasticSearchService;
+    @Autowired
+    private ElasticSearchService elasticSearchService;
 
-  public List<Message> list() {
-    return messageRepository.findAll();
-  }
-
-  public Message create(Message message) {
-    //On insère que les messages avec une ip non existante en bdd
-    if (!messageRepository.existsByIp(message.getIp())) {
-      messageRepository.save(message);
-      sendToEs(message);
-      return message;
+    public List<Message> list() {
+        return messageRepository.findAll();
     }
-    return null;
-  }
 
-  public Optional<Message> findById(Long id) {
-    return messageRepository.findById(id);
-  }
+    public Message create(Message message) {
+        //On insère que les messages avec une ip non existante en bdd
+        if (!messageRepository.existsByIp(message.getIp())) {
+            messageRepository.save(message);
+            sendToEs(message);
+            return message;
+        }
+        return null;
+    }
 
-  private void sendToEs(Message message) {
-    SimpleDateFormat indexFormatES = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
-    DateTime dateTime = new DateTime(new Date());
-    message.setDate(indexFormatES.format(dateTime.minusHours(1).toDate()));
+    public Optional<Message> findById(Long id) {
+        return messageRepository.findById(id);
+    }
 
-    elasticSearchService.send(INDEX_MESSAGE, message);
-  }
+    public void deleteById(Long id) {
+        Message message = findById(id).get();
+        messageRepository.delete(message);
+    }
+
+    private void sendToEs(Message message) {
+        SimpleDateFormat indexFormatES = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
+        DateTime dateTime = new DateTime(new Date());
+        message.setDate(indexFormatES.format(dateTime.minusHours(1).toDate()));
+
+        elasticSearchService.send(INDEX_MESSAGE, message);
+    }
 }
