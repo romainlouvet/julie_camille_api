@@ -4,6 +4,7 @@ import fr.mobileagri.julie_camille_api.entity.Message;
 import fr.mobileagri.julie_camille_api.service.MessageService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -16,6 +17,7 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
+@CrossOrigin(origins = "http://localhost:9000", maxAge = 3600)
 @RestController
 public class MessageController {
 
