@@ -3,6 +3,7 @@ package fr.mobileagri.julie_camille_api.controller;
 import fr.mobileagri.julie_camille_api.entity.Message;
 import fr.mobileagri.julie_camille_api.service.MessageService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -21,71 +22,77 @@ import javax.validation.Valid;
 @RestController
 public class MessageController {
 
-    @Autowired
-    private MessageService messageService;
+  @Autowired
+  private MessageService messageService;
 
-    @GetMapping("/messages")
-    public List<Message> getMessages() {
-        return messageService.list();
+  @GetMapping("/messages")
+  public List<Message> getMessages() {
+    return messageService.list();
+  }
+
+  /**
+   * Gets message by id.
+   *
+   * @param messageId the message id
+   * @return the message by id
+   */
+  @GetMapping("/message/{id}")
+  public ResponseEntity<Message> getUMessageById(@PathVariable(value = "id") Long messageId) {
+    Message message = messageService.findById(messageId)
+        .orElse(null);
+
+    if (message != null) {
+      return ResponseEntity.ok().body(message);
+    } else {
+      return ResponseEntity.notFound().build();
+    }
+  }
+
+  /**
+   * Delete message by id.
+   *
+   * @param messageId the message id
+   */
+  @DeleteMapping("/message/{id}")
+  public ResponseEntity<Message> deleteUMessageById(@PathVariable(value = "id") Long messageId) {
+    Message message = messageService.findById(messageId)
+        .orElse(null);
+
+    if (message != null) {
+      messageService.deleteById(messageId);
+      return ResponseEntity.ok().build();
+    } else {
+      return ResponseEntity.notFound().build();
+    }
+  }
+
+  /**
+   * Create Message message.
+   *
+   * @param message the message
+   * @return the message
+   */
+  @PostMapping("/message")
+  public ResponseEntity<Message> createMessage(@Valid @RequestBody Message message, HttpServletRequest request) {
+    message.setIp(request.getRemoteAddr());
+
+    Message messageCreated = null;
+    try {
+      messageCreated = messageService.create(message);
+    } catch (IllegalStateException ex) {
+        new ResponseEntity(ex.getMessage(), HttpStatus.TOO_MANY_REQUESTS);
     }
 
-    /**
-     * Gets message by id.
-     *
-     * @param messageId the message id
-     * @return the message by id
-     */
-    @GetMapping("/message/{id}")
-    public ResponseEntity<Message> getUMessageById(@PathVariable(value = "id") Long messageId) {
-        Message message = messageService.findById(messageId)
-            .orElse(null);
-
-        if (message != null) {
-            return ResponseEntity.ok().body(message);
-        } else {
-            return ResponseEntity.notFound().build();
-        }
+    if (messageCreated != null) {
+      return ResponseEntity.ok().body(messageCreated);
+    } else {
+      return ResponseEntity.badRequest().build();
     }
-
-    /**
-     * Delete message by id.
-     *
-     * @param messageId the message id
-     */
-    @DeleteMapping("/message/{id}")
-    public ResponseEntity<Message> deleteUMessageById(@PathVariable(value = "id") Long messageId) {
-        Message message = messageService.findById(messageId)
-            .orElse(null);
-
-        if (message != null) {
-            messageService.deleteById(messageId);
-            return ResponseEntity.ok().build();
-        } else {
-            return ResponseEntity.notFound().build();
-        }
-    }
-
-    /**
-     * Create Message message.
-     *
-     * @param message the message
-     * @return the message
-     */
-    @PostMapping("/message")
-    public ResponseEntity<Message> createMessage(@Valid @RequestBody Message message, HttpServletRequest request) {
-        message.setIp(request.getRemoteAddr());
-        Message messageCreated = messageService.create(message);
-
-        if (messageCreated != null) {
-            return ResponseEntity.ok().body(messageCreated);
-        } else {
-            return ResponseEntity.badRequest().build();
-        }
-    }
+  }
 
 
-    @GetMapping("/version")
-    public String getVersion() {
-        return "1.0";
-    }
+  @GetMapping("/version")
+  public String getVersion() {
+    return "1.0";
+  }
 }
