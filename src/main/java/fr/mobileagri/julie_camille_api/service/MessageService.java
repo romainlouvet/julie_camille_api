@@ -19,7 +19,7 @@ import java.util.Optional;
 public class MessageService {
 
   private static final String INDEX_MESSAGE = "julie_camille_messages";
-  private static final int NB_MAX_REVIEW_BY_DAY = 2;
+  private static final int NB_MAX_REVIEW_BY_DAY = 50;
   private static Logger logger = LoggerFactory.getLogger(MessageService.class);
 
   @Autowired
