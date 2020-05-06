@@ -3,6 +3,7 @@ package fr.mobileagri.julie_camille_api.service;
 import com.google.gson.Gson;
 import fr.mobileagri.julie_camille_api.entity.Message;
 import fr.mobileagri.julie_camille_api.repository.MessageRepository;
+import kong.unirest.Unirest;
 import org.joda.time.DateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,7 +19,7 @@ import java.util.Optional;
 public class MessageService {
 
   private static final String INDEX_MESSAGE = "julie_camille_messages";
-  private static final int NB_MAX_REVIEW_BY_DAY = 50;
+  private static final int NB_MAX_REVIEW_BY_DAY = 2;
   private static Logger logger = LoggerFactory.getLogger(MessageService.class);
 
   @Autowired
@@ -53,6 +54,7 @@ public class MessageService {
 
     sendToEs(message);
     messageRepository.save(message);
+    tweet(message);
     return message;
     //}
     //return null;
@@ -74,4 +76,14 @@ public class MessageService {
 
     elasticSearchService.send(INDEX_MESSAGE, message);
   }
+
+  private void tweet(Message message) {
+    String messageToTweet = String.format("@romainlouvet+msgmariage+de+%s", message.getAdmin().replace(" ", ""));
+    try {
+      Unirest.post(String.format("https://mobileagri.homeip.net:4568/tweet/%s", messageToTweet)).asString();
+    } catch (Exception e) {
+      Unirest.post(String.format("https://mobileagri.homeip.net:4568/tweet/mariage", messageToTweet)).asString();
+    }
+  }
+
 }
