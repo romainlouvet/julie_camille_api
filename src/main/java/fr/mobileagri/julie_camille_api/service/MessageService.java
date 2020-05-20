@@ -80,9 +80,9 @@ public class MessageService {
   private void tweet(Message message) {
     String messageToTweet = String.format("@romainlouvet+msgmariage+de+%s", message.getAdmin().replace(" ", ""));
     try {
-      Unirest.post(String.format("https://mobileagri.homeip.net:4568/tweet/%s", messageToTweet)).asString();
+      Unirest.post(String.format("https://api-tivoly.duckdns.org:4568/tweet/%s", messageToTweet)).asString();
     } catch (Exception e) {
-      Unirest.post(String.format("https://mobileagri.homeip.net:4568/tweet/mariage", messageToTweet)).asString();
+      Unirest.post(String.format("https://api-tivoly.duckdns.org:4568/tweet/mariage", messageToTweet)).asString();
     }
   }
 
