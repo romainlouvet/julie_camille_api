@@ -18,7 +18,7 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
-@CrossOrigin(origins = "http://mobileagri.homeip.net:9000", maxAge = 3600)
+@CrossOrigin(origins = "http://api-tivoly.duckdns.org:9000", maxAge = 3600)
 @RestController
 public class MessageController {
 
